@@ -105,11 +105,6 @@ Register a user
 
 Login using /api/users/login
 
-Use any Book API — authentication is handled automatically via cookies
-
-Live Test Example
-https://book-catalog-api-ns6e.onrender.com/health
-
 Deployment:
 Render.com
 Step 1: Create Web Service
