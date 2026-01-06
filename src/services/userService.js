@@ -3,18 +3,22 @@ const User = require("../models/User");
 
 // Generate JWT Token
 const generateToken = (id) => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined in environment variables");
+  }
+
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
+    expiresIn: process.env.JWT_EXPIRE || "24h",
   });
 };
 
 // Register a new user
 const registerUser = async (userData) => {
-  const { username, email, password } = userData;
+  const { name, email, password } = userData;
 
   // Check if user already exists
   const existingUser = await User.findOne({
-    $or: [{ email }, { username }],
+    $or: [{ email }, { name }],
   });
 
   if (existingUser) {
@@ -23,7 +27,7 @@ const registerUser = async (userData) => {
 
   // Create user
   const user = await User.create({
-    username,
+    name,
     email,
     password,
   });
@@ -34,7 +38,7 @@ const registerUser = async (userData) => {
   // Prepare user data (exclude password)
   const userResponse = {
     _id: user._id,
-    username: user.username,
+    name: user.name,
     email: user.email,
     createdAt: user.createdAt,
   };
@@ -67,7 +71,7 @@ const loginUser = async (email, password) => {
   // Prepare user data (exclude password)
   const userResponse = {
     _id: user._id,
-    username: user.username,
+    name: user.name,
     email: user.email,
     createdAt: user.createdAt,
   };
