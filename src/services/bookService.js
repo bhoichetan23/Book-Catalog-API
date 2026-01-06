@@ -22,7 +22,7 @@ const createBook = async (bookData, userId) => {
   });
 
   // Populate createdBy field
-  await book.populate("createdBy", "username email");
+  await book.populate("createdBy", "name email");
 
   return book;
 };
@@ -30,7 +30,7 @@ const createBook = async (bookData, userId) => {
 // Get all books
 const getAllBooks = async () => {
   const books = await Book.find()
-    .populate("createdBy", "username email")
+    .populate("createdBy", "name email")
     .sort("-createdAt");
 
   return books;
@@ -38,10 +38,7 @@ const getAllBooks = async () => {
 
 // Get book by ID
 const getBookById = async (bookId) => {
-  const book = await Book.findById(bookId).populate(
-    "createdBy",
-    "username email"
-  );
+  const book = await Book.findById(bookId).populate("createdBy", "name email");
 
   if (!book) {
     throw new Error("Book not found");
@@ -76,7 +73,7 @@ const updateBook = async (bookId, updateData, userId) => {
   const updatedBook = await Book.findByIdAndUpdate(bookId, updateData, {
     new: true,
     runValidators: true,
-  }).populate("createdBy", "username email");
+  }).populate("createdBy", "name email");
 
   return updatedBook;
 };
