@@ -3,13 +3,13 @@ const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
-    username: {
+    name: {
       type: String,
-      required: [true, "Username is required"],
+      required: [true, "Name is required"],
       unique: true,
       trim: true,
-      minlength: [3, "Username must be at least 3 characters"],
-      maxlength: [30, "Username cannot exceed 30 characters"],
+      minlength: [3, "name must be at least 3 characters"],
+      maxlength: [30, "name cannot exceed 30 characters"],
     },
     email: {
       type: String,
