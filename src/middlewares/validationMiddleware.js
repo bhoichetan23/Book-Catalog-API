@@ -3,16 +3,16 @@ const { errorResponse } = require("../utils/responseHandler");
 // Validation rules for registration
 const validateRegister = [
   (req, res, next) => {
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
 
     // Check required fields
-    if (!username || !email || !password) {
+    if (!name || !email || !password) {
       return errorResponse(res, "All fields are required", 400);
     }
 
     // Username validation
-    if (username.length < 3 || username.length > 30) {
-      return errorResponse(res, "Username must be 3-30 characters", 400);
+    if (name.length < 3 || name.length > 30) {
+      return errorResponse(res, "Name must be 3-30 characters", 400);
     }
 
     // Email validation
