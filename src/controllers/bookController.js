@@ -4,12 +4,11 @@ const bookService = require("../services/bookService");
 // Create a new book
 const createBook = async (req, res) => {
   try {
-    const book = await bookService.createBook(req.body, req.user._id);
+    const book = await bookService.createBook(req.body);
 
     console.log("New book created:", {
       bookId: book._id,
       title: book.title,
-      createdBy: req.user._id,
     });
 
     return successResponse(res, book, "Book created successfully", 201);
@@ -30,6 +29,9 @@ const getAllBooks = async (req, res) => {
     const books = await bookService.getAllBooks();
 
     console.log("Books retrieved:", { count: books.length });
+    if (books.length === 0) {
+      return successResponse(res, [], "No books found in the catalog");
+    }
 
     return successResponse(res, books, "Books retrieved successfully");
   } catch (error) {
@@ -60,13 +62,9 @@ const getBookById = async (req, res) => {
 // Update a book
 const updateBook = async (req, res) => {
   try {
-    const book = await bookService.updateBook(
-      req.params.id,
-      req.body,
-      req.user._id
-    );
+    const book = await bookService.updateBook(req.params.id, req.body);
 
-    console.log("Book updated:", { bookId: book._id, updatedBy: req.user._id });
+    console.log("Book updated:", { bookId: book._id });
 
     return successResponse(res, book, "Book updated successfully");
   } catch (error) {
@@ -90,11 +88,10 @@ const updateBook = async (req, res) => {
 // Delete a book
 const deleteBook = async (req, res) => {
   try {
-    await bookService.deleteBook(req.params.id, req.user._id);
+    await bookService.deleteBook(req.params.id);
 
     console.log("Book deleted:", {
       bookId: req.params.id,
-      deletedBy: req.user._id,
     });
 
     return successResponse(res, null, "Book deleted successfully");
