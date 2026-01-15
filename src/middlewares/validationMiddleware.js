@@ -45,10 +45,10 @@ const validateLogin = [
 // Validation rules for creating a book
 const validateCreateBook = [
   (req, res, next) => {
-    const { title, author, genre, publicationYear, ISBN } = req.body;
+    const { title, author, genre, price, inStock } = req.body;
 
     // Check required fields
-    if (!title || !author || !genre || !publicationYear || !ISBN) {
+    if (!title || !author || !genre || !price || !inStock) {
       return errorResponse(res, "All required fields must be filled", 400);
     }
 
@@ -83,29 +83,39 @@ const validateCreateBook = [
       return errorResponse(res, "Please select a valid genre", 400);
     }
 
-    // Publication year validation
-    const currentYear = new Date().getFullYear();
-    if (publicationYear < 1000 || publicationYear > currentYear) {
-      return errorResponse(
-        res,
-        `Publication year must be between 1000 and ${currentYear}`,
-        400
-      );
+    // Price validation
+    if (price < 0) {
+      return errorResponse(res, "Price cannot be negative", 400);
     }
 
-    // ISBN validation
-    if (ISBN.length < 10 || ISBN.length > 17) {
-      return errorResponse(res, "ISBN must be 10-17 characters", 400);
+    // Price must be a number
+    if (typeof price !== "number") {
+      return errorResponse(res, "Price must be a number", 400);
     }
 
-    // Description validation (optional)
-    if (req.body.description && req.body.description.length > 1000) {
-      return errorResponse(
-        res,
-        "Description cannot exceed 1000 characters",
-        400
-      );
-    }
+    // // Publication year validation
+    // const currentYear = new Date().getFullYear();
+    // if (publicationYear < 1000 || publicationYear > currentYear) {
+    //   return errorResponse(
+    //     res,
+    //     `Publication year must be between 1000 and ${currentYear}`,
+    //     400
+    //   );
+    // }
+
+    // // ISBN validation
+    // if (ISBN.length < 10 || ISBN.length > 17) {
+    //   return errorResponse(res, "ISBN must be 10-17 characters", 400);
+    // }
+
+    // // Description validation (optional)
+    // if (req.body.description && req.body.description.length > 1000) {
+    //   return errorResponse(
+    //     res,
+    //     "Description cannot exceed 1000 characters",
+    //     400
+    //   );
+    // }
 
     next();
   },
@@ -114,18 +124,10 @@ const validateCreateBook = [
 // Validation rules for updating a book
 const validateUpdateBook = [
   (req, res, next) => {
-    const { title, author, genre, publicationYear, ISBN, description } =
-      req.body;
+    const { title, author, genre, price, inStock } = req.body;
 
     // Check if at least one field is provided
-    if (
-      !title &&
-      !author &&
-      !genre &&
-      !publicationYear &&
-      !ISBN &&
-      !description
-    ) {
+    if (!title && !author && !genre && !price && !inStock) {
       return errorResponse(
         res,
         "At least one field must be provided for update",
@@ -166,31 +168,31 @@ const validateUpdateBook = [
       }
     }
 
-    // Validate publication year if provided
-    if (publicationYear) {
-      const currentYear = new Date().getFullYear();
-      if (publicationYear < 1000 || publicationYear > currentYear) {
-        return errorResponse(
-          res,
-          `Publication year must be between 1000 and ${currentYear}`,
-          400
-        );
-      }
-    }
+    // // Validate publication year if provided
+    // if (publicationYear) {
+    //   const currentYear = new Date().getFullYear();
+    //   if (publicationYear < 1000 || publicationYear > currentYear) {
+    //     return errorResponse(
+    //       res,
+    //       `Publication year must be between 1000 and ${currentYear}`,
+    //       400
+    //     );
+    //   }
+    // }
 
-    // Validate ISBN if provided
-    if (ISBN && (ISBN.length < 10 || ISBN.length > 17)) {
-      return errorResponse(res, "ISBN must be 10-17 characters", 400);
-    }
+    // // Validate ISBN if provided
+    // if (ISBN && (ISBN.length < 10 || ISBN.length > 17)) {
+    //   return errorResponse(res, "ISBN must be 10-17 characters", 400);
+    // }
 
-    // Validate description if provided
-    if (description && description.length > 1000) {
-      return errorResponse(
-        res,
-        "Description cannot exceed 1000 characters",
-        400
-      );
-    }
+    // // Validate description if provided
+    // if (description && description.length > 1000) {
+    //   return errorResponse(
+    //     res,
+    //     "Description cannot exceed 1000 characters",
+    //     400
+    //   );
+    // }
 
     next();
   },
